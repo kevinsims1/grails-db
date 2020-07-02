@@ -36,7 +36,7 @@ module.exports = {
   },
   createItem: async(req, res) => {
     try{
-      const newItem = await Item.create({...req.body})
+      const newItem = await Item.create({user: req.query.id, ...req.body})
       res.status(200).json({newItem})
     }catch(err){
       res.status(500).json({err})
@@ -52,7 +52,7 @@ module.exports = {
   },
   getItems: async(req, res) => {
     try{
-      const items = await Item.find( { user: { $in : [req.body.id] } } ).lean().exec()
+      const items = await Item.find( { user: { $in : [req.query.id] } } )
       res.status(200).json({items})
     }catch(err){
       res.status(500).json({err})
@@ -60,7 +60,7 @@ module.exports = {
   },
   getItem: async(req, res) => {
     try{
-      const item = await Item.findById( { _id: req.body.id } ).lean().exec()
+      const item = await Item.findById( { _id: req.body.id } )
       res.status(200).json({item})
     }catch(err){
       res.status(500).json({err})
