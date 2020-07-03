@@ -52,8 +52,9 @@ module.exports = {
   },
   getItems: async(req, res) => {
     try{
-      const items = await Item.find( { user: { $in : [req.query.id] } } )
-      res.status(200).json({items})
+      const items = await Item.find( { user: { $in : req.query.id } } )
+      console.log(items)
+      res.status(200).json({doc : items})
     }catch(err){
       res.status(500).json({err})
     }

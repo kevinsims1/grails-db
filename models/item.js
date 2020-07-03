@@ -6,6 +6,7 @@ var itemSchema = new Schema({
   name: {type: String, required: true},
   size: {type: String, required: true},
   condition: {type: String, required: true},
+  price: {type: String, required: true},
   user: {type: mongoose.Schema.Types.ObjectId, ref: 'admin'},
 })
 
