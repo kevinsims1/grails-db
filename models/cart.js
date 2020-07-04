@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema
 
-var itemSchema = new Schema({
+var cartSchema = new Schema({
   category: {type: String, required: true},
   name: {type: String, required: true},
   size: {type: String, required: true},
@@ -11,7 +11,7 @@ var itemSchema = new Schema({
   user: {type: mongoose.Schema.Types.ObjectId, ref: 'admin'},
 })
 
-var Item = mongoose.model('item', itemSchema)
+var Cart = mongoose.model('cart', cartSchema)
 
 
-module.exports = Item
+module.exports = Cart

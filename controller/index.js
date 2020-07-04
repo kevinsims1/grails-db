@@ -3,7 +3,7 @@ const Item = require('../models/item')
 const bcrypt = require('bcrypt')
 
 module.exports = {
-  signUp: async(req,res)=> {
+  signUp: async(req,res) => {
     try{
       const {email,password} = req.body
       if(!email || !password){
@@ -22,7 +22,7 @@ module.exports = {
       res.status(500).json({ err })
     }
   },
-  signIn: async(req,res)=> {
+  signIn: async(req,res) => {
     try{
       const {email,password} = req.body
       if(email && password){
@@ -61,7 +61,7 @@ module.exports = {
   },
   getItem: async(req, res) => {
     try{
-      const item = await Item.findById( { _id: req.body.id } )
+      const item = await Item.findById( { _id: req.query.id } )
       res.status(200).json({item})
     }catch(err){
       res.status(500).json({err})
@@ -69,7 +69,7 @@ module.exports = {
   },
   deleteItem: async(req, res) => {
     try{
-      const item = await Item.findByIdAndDelete({_id: req.body.id}).lean().exec()
+      const item = await Item.findByIdAndDelete({_id: req.query.id}).lean().exec()
       res.status(200).json({item})
     }catch(err){
       res.status(500).json({err})
