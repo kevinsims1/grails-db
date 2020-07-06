@@ -3,16 +3,21 @@ const Item = require('../models/item')
 const bcrypt = require('bcrypt')
 
 module.exports = {
-  signUp: async(req,res) => {
+  signUp: (model) => async(req,res) => {
     try{
       const {email,password} = req.body
+      console.log(email, password)
+
       if(!email || !password){
         throw new Error('check email and password')
       }
 
+
+
       bcrypt.hash(password, 12, async function(err, hash) {
         try{
-          const user =  await Admin.create({ ...req.body, password: hash })
+          const user =  await model.create({ ...req.body, password: hash })
+          console.log(user)
           res.status(200).json({ user })
         }catch(err){
           res.status(404).json({ err })
@@ -22,12 +27,12 @@ module.exports = {
       res.status(500).json({ err })
     }
   },
-  signIn: async(req,res) => {
+  signIn: (model) => async(req,res) => {
     try{
       const {email,password} = req.body
       if(email && password){
-        const valid = Admin.findOne({email})
-        res.status(200).json({ message: 'success' })
+        const valid = model.findOne({email})
+        res.status(200).json({ message: 'success', user: valid })
       }
       throw new Error('check email and password')
     }catch(err){
@@ -52,7 +57,7 @@ module.exports = {
   },
   getItems: async(req, res) => {
     try{
-      const items = await Item.find( { user: { $in : req.query.id }, sold: false } )
+      const items = await Item.find( { sold: false } )
       console.log(items)
       res.status(200).json({doc : items})
     }catch(err){

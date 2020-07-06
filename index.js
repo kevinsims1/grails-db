@@ -8,6 +8,7 @@ var cors = require('cors')
 let itemRoutes = require('./routes/items')
 let adminRoutes = require('./routes/admin')
 let authRoutes = require('./routes/auth')
+let userRoutes = require('./routes/user')
 
 express.use(
      bp.urlencoded({
@@ -21,6 +22,7 @@ express.use(bp.json());
 
 express.get('/', (req, res) => res.send('Hello World with Express'));
 express.use('/items', itemRoutes)
+express.use('/user', userRoutes)
 express.use('/admin', adminRoutes)
 express.use('/auth', authRoutes)
 

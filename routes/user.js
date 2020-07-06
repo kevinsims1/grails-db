@@ -1,10 +1,9 @@
 const router = require('express').Router()
 const controller = require('../controller')
-const Admin = require('../models/admin')
-
+const user = require('../models/user')
 router.get('/check', (req,res) => res.send('hello world'))
-router.post('/signup/admin', controller.signUp(Admin))
-router.post('/signin', controller.signIn(Admin))
+router.post('/signup', controller.signUp(user))
+router.post('/signin', controller.signIn(user))
 
 
 module.exports = router
