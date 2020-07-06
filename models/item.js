@@ -9,6 +9,7 @@ var itemSchema = new Schema({
   description: {type: String, required: true},
   price: {type: String, required: true},
   user: {type: mongoose.Schema.Types.ObjectId, ref: 'admin'},
+  sold: {type: Boolean, required: true}
 })
 
 var Item = mongoose.model('item', itemSchema)
