@@ -1,5 +1,6 @@
 const Admin = require('../models/admin')
 const Item = require('../models/item')
+const Cart = require('../models/cart')
 const bcrypt = require('bcrypt')
 
 module.exports = {
@@ -79,5 +80,15 @@ module.exports = {
     }catch(err){
       res.status(500).json({err})
     }
-  }
+  },
+  getCart: async(req, res) => {
+    try{
+      const cart = await Cart.find( { user: req.query.id} )
+      console.log(cart)
+      res.status(200).json({doc : cart})
+    }catch(err){
+      res.status(500).json({err})
+    }
+  },
+  
 }
