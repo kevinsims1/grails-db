@@ -7,6 +7,7 @@ router.get('/check', (req,res) => res.send('hello world'))
 router.post('/signup', controller.signUp(user))
 router.post('/signin', controller.signIn(user))
 router.get('/cart', controller.getCart)
+router.post('/additem', controller.addToCart)
 router.post('/id', async (req, res) => {
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ['card'],
@@ -18,7 +19,7 @@ router.post('/id', async (req, res) => {
         },
         unit_amount: req.query.amount,
       },
-      quantity: req.query,quantity,
+      quantity: req.query.quantity,
     }],
     mode: 'payment',
     success_url: 'http:localhost:8080/',

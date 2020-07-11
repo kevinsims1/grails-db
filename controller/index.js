@@ -18,8 +18,9 @@ module.exports = {
       bcrypt.hash(password, 12, async function(err, hash) {
         try{
           const user =  await model.create({ ...req.body, password: hash })
+          const cart =  await Cart.create({user: user.id})
           console.log(user)
-          res.status(200).json({ user })
+          res.status(200).json({ user, cart })
         }catch(err){
           res.status(404).json({ err })
         }
@@ -31,9 +32,12 @@ module.exports = {
   signIn: (model) => async(req,res) => {
     try{
       const {email,password} = req.body
+
+      console.log(req.body)
       if(email && password){
-        const valid = model.findOne({email})
-        res.status(200).json({ message: 'success', user: valid })
+        const valid = await model.findOne({email})
+        console.log(valid)
+        res.status(200).json({ user: valid })
       }
       throw new Error('check email and password')
     }catch(err){
@@ -75,7 +79,7 @@ module.exports = {
   },
   deleteItem: async(req, res) => {
     try{
-      const item = await Item.findByIdAndDelete({_id: req.query.id}).lean().exec()
+      const item = await Item.findByIdAndDelete({user: req.query.id}).lean().exec()
       res.status(200).json({item})
     }catch(err){
       res.status(500).json({err})
@@ -83,12 +87,23 @@ module.exports = {
   },
   getCart: async(req, res) => {
     try{
-      const cart = await Cart.find( { user: req.query.id} )
+      const cart = await Cart.findOne( { user: req.query.id} )
       console.log(cart)
       res.status(200).json({doc : cart})
     }catch(err){
       res.status(500).json({err})
     }
   },
-  
+  addToCart: async(req, res) => {
+    try{
+      console.log(req.query.id)
+      console.log(req.body)
+      const cart = await Cart.update( { user: req.query.id}, {$push: {items: req.body.id}}, {new: true })
+      console.log(cart)
+      res.status(200).json({doc : cart})
+    }catch(err){
+      console.log(err)
+      res.status(500).json({err})
+    }
+  },
 }
