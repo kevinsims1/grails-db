@@ -96,9 +96,9 @@ module.exports = {
   },
   addToCart: async(req, res) => {
     try{
-      console.log(req.query.id)
-      console.log(req.body)
-      const cart = await Cart.update( { user: req.query.id}, {$push: {items: req.body.id}}, {new: true })
+      const [records] = await Item.find().where('_id').in(req.body.id).exec();
+      // console.log(records)
+      const cart = await Cart.findOneAndUpdate( { user: req.query.id}, {$push: {items: req.body.id}, $inc: { price: records.price}}, {new: true }).lean().exec()
       console.log(cart)
       res.status(200).json({doc : cart})
     }catch(err){

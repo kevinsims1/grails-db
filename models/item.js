@@ -7,7 +7,7 @@ var itemSchema = new Schema({
   size: {type: String, required: true},
   condition: {type: String, required: true},
   description: {type: String, required: true},
-  price: {type: String, required: true},
+  price: {type: Number, required: true},
   user: {type: mongoose.Schema.Types.ObjectId, ref: 'admin'},
   sold: {type: Boolean, required: true}
 })
