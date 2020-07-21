@@ -15,14 +15,15 @@ router.post('/additem', controller.addToCart)
 router.post('/checkout', async (req, res) => {
   try{
     const { id, price} = req.body
-    const charge = price.parseInt(price, 10)
+    console.log('price', price)
+    // const charge = price.parseInt(price, 10)
     const payment = await stripe.paymentIntents.create({
-      amount: charge * 100,
+      amount: price * 100,
       currency: "usd",
       description: "clothes",
       payment_method: id,
       confirm: true,
-      payment_method_types: ['card']
+      metadata: {integration_check: 'accept_a_payment'},
     })
 
     console.log(payment)
