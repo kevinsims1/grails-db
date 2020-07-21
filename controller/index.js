@@ -87,9 +87,11 @@ module.exports = {
   },
   getCart: async(req, res) => {
     try{
+      let arr = []
       const cart = await Cart.findOne( { user: req.query.id} )
-      console.log(cart)
-      res.status(200).json({doc : cart})
+      const items = await Item.find().where('_id').in(cart.items).exec()
+      console.log(items)
+      res.status(200).json({doc : items})
     }catch(err){
       res.status(500).json({err})
     }
