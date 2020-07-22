@@ -2,6 +2,12 @@ const Admin = require('../models/admin')
 const Item = require('../models/item')
 const Cart = require('../models/cart')
 const bcrypt = require('bcrypt')
+const {
+  STRIPEKEY
+} = process.env
+const stripe = require('stripe')(
+  `${STRIPEKEY}`
+)
 
 module.exports = {
   signUp: (model) => async(req,res) => {
@@ -108,4 +114,28 @@ module.exports = {
       res.status(500).json({err})
     }
   },
+  checkout: async (req, res) => {
+    try{
+      const { id, price} = req.body
+      console.log('price', price)
+      // const charge = price.parseInt(price, 10)
+      const payment = await stripe.paymentIntents.create({
+        amount: price * 100,
+        currency: "usd",
+        description: "clothes",
+        payment_method: id,
+        confirm: false,
+        metadata: {integration_check: 'accept_a_payment'},
+      })
+  
+      console.log(payment)
+      if(payment){
+        res.status(200).json({
+          confirm: 'Success'
+        })
+      }
+    }catch(err){
+      console.log(err)
+    }
+  }
 }
