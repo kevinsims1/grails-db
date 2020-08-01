@@ -127,6 +127,16 @@ module.exports = {
       res.status(500).json({err})
     }
   },
+  getCategory: async(req, res) => {
+    try{
+      const records = await Item.find().where('category').in(req.query.category).exec();
+      
+      res.status(200).json({doc : records})
+    }catch(err){
+      console.log(err)
+      res.status(500).json({err})
+    }
+  },
   checkout: async (req, res) => {
     try{
       const { id, price} = req.body

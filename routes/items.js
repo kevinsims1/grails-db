@@ -5,6 +5,7 @@ router.post('/create', controller.createItem)
 router.post('/update', controller.updateItem)
 router.post('/delete', controller.deleteItem)
 router.get('/all', controller.getItems)
+router.get('/category', controller.getCategory)
 router.get('/solo', controller.getItem)
 
 
