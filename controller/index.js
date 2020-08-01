@@ -114,6 +114,19 @@ module.exports = {
       res.status(500).json({err})
     }
   },
+  removeFromCart: async(req, res) => {
+    try{
+      const [records] = await Item.find().where('_id').in(req.body.id).exec();
+      // console.log(records)
+      const cart = await Cart.findOneAndUpdate( { user: req.query.id}, {$pull: {items: req.body.id}, $inc: { price: -1}}, {new: true }).lean().exec()
+
+      console.log(cart)
+      res.status(200).json({doc : cart})
+    }catch(err){
+      console.log(err)
+      res.status(500).json({err})
+    }
+  },
   checkout: async (req, res) => {
     try{
       const { id, price} = req.body
@@ -124,7 +137,7 @@ module.exports = {
         currency: "usd",
         description: "clothes",
         payment_method: id,
-        confirm: false,
+        confirm: true,
         metadata: {integration_check: 'accept_a_payment'},
       })
   
