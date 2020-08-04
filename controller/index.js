@@ -2,6 +2,8 @@ const Admin = require('../models/admin')
 const Item = require('../models/item')
 const Cart = require('../models/cart')
 const bcrypt = require('bcrypt')
+const axios = require('axios')
+
 const {
   STRIPEKEY
 } = process.env
@@ -18,8 +20,6 @@ module.exports = {
       if(!email || !password){
         throw new Error('check email and password')
       }
-
-
 
       bcrypt.hash(password, 12, async function(err, hash) {
         try{
@@ -52,8 +52,19 @@ module.exports = {
   },
   createItem: async(req, res) => {
     try{
-      const newItem = await Item.create({user: req.query.id, ...req.body})
-      res.status(200).json({newItem})
+      console.log('hey')
+      console.log(req.body)
+      const [picture] = req.body.pic
+      console.log(picture)
+      const pic = await axios.post(`https://api.imgbb.com/1/upload?key=${process.env.IMGBBKEY}`, {
+        image: picture
+      })
+
+      console.log(pic)
+      res.status(200).json({})
+
+      // const newItem = await Item.create({user: req.query.id, ...req.body})
+      // res.status(200).json({newItem})
     }catch(err){
       res.status(500).json({err})
     }
@@ -116,11 +127,8 @@ module.exports = {
   },
   removeFromCart: async(req, res) => {
     try{
-      const [records] = await Item.find().where('_id').in(req.body.id).exec();
-      // console.log(records)
       const cart = await Cart.findOneAndUpdate( { user: req.query.id}, {$pull: {items: req.body.id}, $inc: { price: -1}}, {new: true }).lean().exec()
 
-      console.log(cart)
       res.status(200).json({doc : cart})
     }catch(err){
       console.log(err)
