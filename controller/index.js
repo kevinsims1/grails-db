@@ -3,13 +3,8 @@ const Item = require('../models/item')
 const Cart = require('../models/cart')
 const bcrypt = require('bcrypt')
 const axios = require('axios')
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
-const {
-  STRIPEKEY
-} = process.env
-const stripe = require('stripe')(
-  `${STRIPEKEY}`
-)
 
 module.exports = {
   signUp: (model) => async(req,res) => {
@@ -104,10 +99,13 @@ module.exports = {
   },
   getCart: async(req, res) => {
     try{
-      let arr = []
       const cart = await Cart.findOne( { user: req.query.id} )
       const items = await Item.find().where('_id').in(cart.items).exec()
-      console.log(items)
+      const listItems = []
+      items.map(i => {
+        listItems.push({name: i.name, description: i.description, amount: i.price * 100})
+      })
+      console.log('new t',listItems)
       res.status(200).json({doc : items})
     }catch(err){
       res.status(500).json({err})
@@ -147,26 +145,25 @@ module.exports = {
   },
   checkout: async (req, res) => {
     try{
-      const { id, price} = req.body
-      console.log('price', price)
-      // const charge = price.parseInt(price, 10)
-      const payment = await stripe.paymentIntents.create({
-        amount: price * 100,
-        currency: "usd",
-        description: "clothes",
-        payment_method: id,
-        confirm: true,
-        metadata: {integration_check: 'accept_a_payment'},
+      const cart = await Cart.findOne( { user: req.query.id} )
+      console.log('cart', cart)
+      const items = await Item.find().where('_id').in(cart.items).exec()
+      const listItems = []
+      items.map(i => {
+        listItems.push({name: i.name, description: i.description, amount: i.price * 100, currency: "usd", quantity: 1})
       })
-  
-      console.log(payment)
-      if(payment){
-        res.status(200).json({
-          confirm: 'Success'
-        })
-      }
+      console.log(listItems)
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ["card"],
+        line_items: listItems,
+        success_url: "http://localhost:8080/",
+        cancel_url: "http://localhost:8080/"
+      });
+      console.log(session)
+      res.json(session);
     }catch(err){
       console.log(err)
+      res.status(500).json({err})
     }
   }
 }

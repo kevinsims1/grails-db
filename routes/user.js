@@ -10,6 +10,6 @@ router.post('/signin', controller.signIn(user))
 router.get('/cart', controller.getCart)
 router.post('/additem', controller.addToCart)
 router.post('/removeitem', controller.removeFromCart)
-router.post('/checkout', controller.checkout)
+router.get('/checkout', controller.checkout)
 
 module.exports = router
