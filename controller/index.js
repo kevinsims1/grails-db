@@ -58,7 +58,7 @@ module.exports = {
       // res.status(200).json({})
 
       const newItem = await Item.create({user: req.query.id, sold: false, ...req.body})
-      
+
       res.status(200).json({newItem})
     }catch(err){
       res.status(500).json({err})
@@ -156,8 +156,8 @@ module.exports = {
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ["card"],
         line_items: listItems,
-        success_url: "http://localhost:8080/",
-        cancel_url: "http://localhost:8080/"
+        success_url: "https://ksks2121.netlify.app/",
+        cancel_url: "https://ksks2121.netlify.app/"
       });
       console.log(session)
       res.json(session);
