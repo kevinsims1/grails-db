@@ -156,8 +156,8 @@ module.exports = {
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ["card"],
         line_items: listItems,
-        success_url: "https://ksks2121.netlify.app/",
-        cancel_url: "https://ksks2121.netlify.app/"
+        success_url: "http://localhost:8080/",
+        cancel_url: "http://localhost:8080/"
       });
       console.log(session)
       res.json(session);
