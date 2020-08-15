@@ -49,17 +49,17 @@ module.exports = {
     try{
       console.log('hey')
       console.log(req.body)
-      const [picture] = req.body.pic
-      console.log(picture)
-      const pic = await axios.post(`https://api.imgbb.com/1/upload?key=${process.env.IMGBBKEY}`, {
-        image: picture
-      })
+      console.log(req.query.id)
+      // const pic = await axios.post(`https://api.imgbb.com/1/upload?key=${process.env.IMGBBKEY}`, {
+      //   image: picture
+      // })
 
-      console.log(pic)
-      res.status(200).json({})
+      // console.log(pic)
+      // res.status(200).json({})
 
-      // const newItem = await Item.create({user: req.query.id, ...req.body})
-      // res.status(200).json({newItem})
+      const newItem = await Item.create({user: req.query.id, sold: false, ...req.body})
+      
+      res.status(200).json({newItem})
     }catch(err){
       res.status(500).json({err})
     }
