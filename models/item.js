@@ -10,6 +10,7 @@ var itemSchema = new Schema({
   price: {type: Number, required: true},
   user: {type: mongoose.Schema.Types.ObjectId, ref: 'admin'},
   sold: {type: Boolean, required: true},
+  image: {type: String, required: true}
 })
 
 var Item = mongoose.model('item', itemSchema)
